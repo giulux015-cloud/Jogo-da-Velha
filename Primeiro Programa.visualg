@@ -1,0 +1,142 @@
+algoritmo "Jogo da Velha"
+var
+ tab: vetor[1..9] de caracter
+ Stab: vetor[1..9,1..9] de caracter
+ T: vetor[1..9] de caracter
+ i, P, SP, jogadas, subjogos: inteiro
+ quem, vez, ganhador: caracter
+ fim, ok: logico
+
+funcao venceu(s: caracter): logico
+inicio
+ se (T[1]=s) e (T[2]=s) e (T[3]=s) entao
+  retorne verdadeiro
+ fimse
+ se (T[4]=s) e (T[5]=s) e (T[6]=s) entao
+  retorne verdadeiro
+ fimse
+ se (T[7]=s) e (T[8]=s) e (T[9]=s) entao
+  retorne verdadeiro
+ fimse
+ se (T[1]=s) e (T[4]=s) e (T[7]=s) entao
+  retorne verdadeiro
+ fimse
+ se (T[2]=s) e (T[5]=s) e (T[8]=s) entao
+  retorne verdadeiro
+ fimse
+ se (T[3]=s) e (T[6]=s) e (T[9]=s) entao
+  retorne verdadeiro
+ fimse
+ se (T[1]=s) e (T[5]=s) e (T[9]=s) entao
+  retorne verdadeiro
+ fimse
+ se (T[3]=s) e (T[5]=s) e (T[7]=s) entao
+  retorne verdadeiro
+ fimse
+ retorne falso
+fimfuncao
+
+procedimento mostrar()
+inicio
+ escreval(" ",T[1]," | ",T[2]," | ",T[3])
+ escreval("---+---+---")
+ escreval(" ",T[4]," | ",T[5]," | ",T[6])
+ escreval("---+---+---")
+ escreval(" ",T[7]," | ",T[8]," | ",T[9])
+fimprocedimento
+
+inicio
+ para i de 1 ate 9 faca
+  tab[i] <- NumpCarac(i)
+  para SP de 1 ate 9 faca
+   Stab[i,SP] <- NumpCarac(SP)
+  fimpara
+ fimpara
+ quem <- "X"
+ ganhador <- "-"
+ subjogos <- 0
+ enquanto (ganhador = "-") e (subjogos < 9) faca
+  para i de 1 ate 9 faca
+   T[i] <- tab[i]
+  fimpara
+  escreval("=== TABULEIRO GRANDE ===")
+  mostrar
+  escreval(quem," sua vez:")
+  ok <- falso
+  enquanto nao ok faca
+   leia(P)
+   se (P < 1) ou (P > 9) entao
+    escreval("Numero invalido")
+   senao
+    se tab[P] <> NumpCarac(P) entao
+     escreval("Casa ocupada")
+    senao
+     ok <- verdadeiro
+    fimse
+   fimse
+  fimenquanto
+  vez <- quem
+  jogadas <- 0
+  fim <- falso
+  enquanto nao fim faca
+   para i de 1 ate 9 faca
+    T[i] <- Stab[P,i]
+   fimpara
+   escreval("--- Casa grande ",P," ---")
+   mostrar
+   escreval("Rodada de ",vez,", escolha a posicao")
+   ok <- falso
+   enquanto nao ok faca
+    leia(SP)
+    se (SP < 1) ou (SP > 9) entao
+     escreval("Numero invalido")
+    senao
+     se Stab[P,SP] <> NumpCarac(SP) entao
+      escreval("Posicao ocupada")
+     senao
+      ok <- verdadeiro
+     fimse
+    fimse
+   fimenquanto
+   Stab[P,SP] <- vez
+   T[SP] <- vez
+   jogadas <- jogadas + 1
+   se venceu(vez) entao
+    tab[P] <- vez
+    fim <- verdadeiro
+   fimse
+   se (jogadas = 9) e (fim = falso) entao
+    tab[P] <- "V"
+    fim <- verdadeiro
+   fimse
+   se vez = "X" entao
+    vez <- "O"
+   senao
+    vez <- "X"
+   fimse
+  fimenquanto
+  subjogos <- subjogos + 1
+  para i de 1 ate 9 faca
+   T[i] <- tab[i]
+  fimpara
+  se venceu("X") entao
+   ganhador <- "X"
+  fimse
+  se venceu("O") entao
+   ganhador <- "O"
+  fimse
+  se quem = "X" entao
+   quem <- "O"
+  senao
+   quem <- "X"
+  fimse
+ fimenquanto
+ escreval("=== FIM DE JOGO ===")
+ mostrar
+ se ganhador = "-" entao
+  escreval("Deu velha!")
+ senao
+  escreval("O vencedor foi ",ganhador ". Parabens! ")
+ fimse
+fimalgoritmo
+
